@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ku" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>یاری گرەو - کوردستان</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: Tahoma, sans-serif; }
+        body {
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.8)), 
+                        url('https://images.unsplash.com/photo-1542224566-6e85f2e6772f?q=80&w=1000&auto=format&fit=crop') no-repeat center center fixed;
+            background-size: cover;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .box {
+            background: rgba(22, 22, 22, 0.9);
+            border: 2px solid #d4af37;
+            border-radius: 15px;
+            padding: 25px;
+            width: 90%;
+            max-width: 380px;
+            text-align: center;
+        }
+        input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            background: #111;
+            border: 1px solid #555;
+            color: #fff;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+        .btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #bf953f, #fcf6ba, #b38728);
+            border: none;
+            border-radius: 8px;
+            color: #000;
+            font-weight: bold;
+            font-size: 15px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .hidden { display: none !important; }
+        h1, h2 { color: #d4af37; margin-bottom: 10px; }
+        p { color: #ccc; font-size: 13px; margin-bottom: 15px; }
+    </style>
+</head>
+<body>
+
+    <audio id="bgMusic" loop>
+        <source src="https://archive.org/download/HassanZirak/HassanZirak.mp3" type="audio/mpeg">
+    </audio>
+
+    <div class="box">
+        <!-- بەشی لۆگین -->
+        <div id="loginDiv">
+            <h1>یاری گرەو - کوردستان</h1>
+            <p>تکایە ژمارەی مۆبایل بنووسە</p>
+            <input type="text" id="phone" placeholder="0750XXXXXXX">
+            <button class="btn" onclick="nextStep()">ناردنی کۆد</button>
+        </div>
+
+        <!-- بەشی کۆد -->
+        <div id="codeDiv" class="hidden">
+            <h1>پشکنینی کۆد</h1>
+            <p>کۆدەکە بنووسە (کۆد: 1234)</p>
+            <input type="text" id="code" placeholder="1234">
+            <button class="btn" onclick="login()">چوونە ژوورەوە</button>
+        </div>
+
+        <!-- بەشی یاری -->
+        <div id="gameDiv" class="hidden">
+            <h2>بەخێر هاتیت بۆ یاری</h2>
+            <p>سیستەم ئامادەیە بۆ یاریکردن!</p>
+            <button class="btn" onclick="alert('دەستپێکردنی یاری!')">دەستپێکردنی یاری</button>
+        </div>
+    </div>
+
+    <script>
+        // لێدانی گۆرانی لە یەکەم کلیک لەسەر شاشە
+        document.body.addEventListener('click', function() {
+            const m = document.getElementById('bgMusic');
+            if (m.paused) { m.play().catch(e => {}); }
+        }, { once: true });
+
+        function nextStep() {
+            if(document.getElementById('phone').value.trim() === "") {
+                alert("تکایە ژمارە بنووسە!");
+                return;
+            }
+            document.getElementById('loginDiv').classList.add('hidden');
+            document.getElementById('codeDiv').classList.remove('hidden');
+        }
+
+        function login() {
+            if(document.getElementById('code').value === "1234") {
+                document.getElementById('bgMusic').pause();
+                document.getElementById('codeDiv').classList.add('hidden');
+                document.getElementById('gameDiv').classList.remove('hidden');
+            } else {
+                alert("کۆدەکە هەڵەیە! تکایە 1234 بنووسە.");
+            }
+        }
+    </script>
+</body>
+</html>

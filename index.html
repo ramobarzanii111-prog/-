@@ -3,6 +3,106 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>یاری ئۆکەی - کوردستان</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: Tahoma, sans-serif; }
+        body {
+            background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.9)), 
+                        url('https://images.unsplash.com/photo-1542224566-6e85f2e6772f?q=80&w=1000&auto=format&fit=crop') no-repeat center center fixed;
+            background-size: cover;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+        .okey-container {
+            background: rgba(20, 20, 20, 0.95);
+            border: 2px solid #3498db;
+            border-radius: 15px;
+            padding: 25px;
+            width: 95%;
+            max-width: 450px;
+            text-align: center;
+            box-shadow: 0 0 25px rgba(52, 152, 219, 0.4);
+        }
+        h2 { color: #3498db; margin-bottom: 15px; }
+        .board {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .tile {
+            background: #fff;
+            color: #000;
+            font-size: 22px;
+            font-weight: bold;
+            padding: 15px 0;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .tile:hover { background: #3498db; color: #fff; }
+        .btn-play {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #2980b9, #3498db);
+            border: none;
+            border-radius: 8px;
+            color: #fff;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- گۆرانی حەسەن زیرەک -->
+    <audio id="bgMusic" loop>
+        <source src="https://archive.org/download/HassanZirak/HassanZirak.mp3" type="audio/mpeg">
+    </audio>
+
+    <div class="okey-container">
+        <h2>🀄 یاری ئۆکەی کوردی</h2>
+        <p style="color: #ccc; font-size: 13px; margin-bottom: 15px;">🎵 گۆرانی حەسەن زیرەک لێ دەدرێت</p>
+        
+        <!-- نموونەی خانەکانی یاری ئۆکەی -->
+        <div class="board">
+            <div class="tile" style="color: red;">٧</div>
+            <div class="tile" style="color: blue;">٧</div>
+            <div class="tile" style="color: black;">٧</div>
+            <div class="tile" style="color: orange;">⭐</div>
+            <div class="tile" style="color: blue;">٨</div>
+            <div class="tile" style="color: red;">٩</div>
+            <div class="tile" style="color: black;">١٠</div>
+            <div class="tile" style="color: orange;">١١</div>
+        </div>
+
+        <button class="btn-play" onclick="startOkey()">دەستپێکردنی خولێکی نوێ</button>
+    </div>
+
+    <script>
+        // لێدانی گۆرانی لە یەکەم کلیک
+        document.body.addEventListener('click', function() {
+            const m = document.getElementById('bgMusic');
+            if (m.paused) { m.play().catch(e => {}); }
+        }, { once: true });
+
+        function startOkey() {
+            alert("یاری ئۆکەی دەستپێکرد! سەرکەوتن بۆ تۆ.");
+        }
+    </script>
+</body>
+</html><!DOCTYPE html>
+<html lang="ku" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>یاری گرەو - کوردستان</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: Tahoma, sans-serif; }

@@ -33,17 +33,6 @@
             box-shadow: 0 0 30px rgba(212, 175, 55, 0.4);
             text-align: center;
         }
-        .logo-area h1 {
-            color: #d4af37;
-            font-size: 26px;
-            margin-bottom: 8px;
-            text-shadow: 0 0 10px rgba(212, 175, 55, 0.6);
-        }
-        .logo-area p {
-            color: #ddd;
-            font-size: 13px;
-            margin-bottom: 20px;
-        }
         .input-group {
             margin-bottom: 15px;
             text-align: right;
@@ -63,11 +52,6 @@
             color: #fff;
             font-size: 15px;
             outline: none;
-            transition: 0.3s;
-        }
-        .input-group input:focus {
-            border-color: #d4af37;
-            box-shadow: 0 0 8px rgba(212, 175, 55, 0.5);
         }
         .btn-casino {
             width: 100%;
@@ -79,13 +63,8 @@
             font-size: 16px;
             font-weight: bold;
             cursor: pointer;
-            transition: 0.3s;
             box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);
             margin-top: 5px;
-        }
-        .btn-casino:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(212, 175, 55, 0.6);
         }
         .hidden {
             display: none !important;
@@ -96,6 +75,7 @@
         .game-screen h2 {
             color: #d4af37;
             margin-bottom: 15px;
+            font-size: 22px;
         }
         .info-box {
             background: rgba(31, 31, 31, 0.9);
@@ -106,9 +86,14 @@
             font-size: 15px;
             color: #f1c40f;
         }
-        .music-notice {
-            font-size: 11px;
-            color: #f1c40f;
+        .logo-area h1 {
+            color: #d4af37;
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+        .logo-area p, .music-notice {
+            color: #ddd;
+            font-size: 12px;
             margin-bottom: 15px;
         }
     </style>
@@ -132,7 +117,7 @@
             <div id="step1">
                 <div class="input-group">
                     <label>ژمارەی مۆبایل یان ئیمێڵ:</label>
-                    <input type="text" id="userInput" placeholder="بۆ نموونە: 0750XXXXXXX">
+                    <input type="text" id="userInput" placeholder="0750XXXXXXX">
                 </div>
                 <button class="btn-casino" onclick="sendCode()">ناردنی کۆدی پشکنین</button>
             </div>
@@ -140,7 +125,7 @@
             <div id="step2" class="hidden">
                 <div class="input-group">
                     <label>کۆدی نێردراو بنووسە (کۆدەکە: 1234):</label>
-                    <input type="text" id="codeinput" placeholder="XXXX">
+                    <input type="text" id="codeinput" placeholder="1234">
                 </div>
                 <button class="btn-casino" onclick="verifyCode()">چوونە ژوورەوە</button>
             </div>
@@ -179,9 +164,9 @@
                 const music = document.getElementById('bgMusic');
                 music.pause();
                 
-                // لێرەدا ڕاستەوخۆ بەشی لۆگین دەشارینەوە و یارییەکە نیشان دەدەین
-                document.getElementById('loginSection').style.display = 'none';
-                document.getElementById('gameSection').style.display = 'block';
+                // لێرەدا بە جوانی بەشی لۆگین دەشارینەوە و یارییەکە نیشان دەدەین
+                document.getElementById('loginSection').classList.add('hidden');
+                document.getElementById('gameSection').classList.remove('hidden');
             } else {
                 alert("کۆدەکە هەڵەیە! تکایە 1234 بنووسە.");
             }

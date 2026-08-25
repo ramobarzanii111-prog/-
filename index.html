@@ -88,7 +88,7 @@
             box-shadow: 0 6px 20px rgba(212, 175, 55, 0.6);
         }
         .hidden {
-            display: none;
+            display: none !important;
         }
         .game-screen {
             text-align: center;
@@ -120,6 +120,7 @@
     </audio>
 
     <div class="casino-container">
+        <!-- بەشی چوونەژوورەوە -->
         <div id="loginSection">
             <div class="logo-area">
                 <h1>🌄 یاری گرەو - کوردستان</h1>
@@ -145,6 +146,7 @@
             </div>
         </div>
 
+        <!-- بەشی ناوەوەی یارییەکە -->
         <div id="gameSection" class="game-screen hidden">
             <h2>بەخێر هاتیت بۆ یاری گرەو</h2>
             <div class="info-box">⭐ کوردستان - لانکەی ئارامی و کاتبەسەربردن</div>
@@ -169,7 +171,6 @@
             }
             document.getElementById('step1').classList.add('hidden');
             document.getElementById('step2').classList.remove('hidden');
-            alert("کۆدی پشکنین نێردرا: 1234");
         }
 
         function verifyCode() {
@@ -178,8 +179,9 @@
                 const music = document.getElementById('bgMusic');
                 music.pause();
                 
-                document.getElementById('loginSection').classList.add('hidden');
-                document.getElementById('gameSection').classList.remove('hidden');
+                // لێرەدا ڕاستەوخۆ بەشی لۆگین دەشارینەوە و یارییەکە نیشان دەدەین
+                document.getElementById('loginSection').style.display = 'none';
+                document.getElementById('gameSection').style.display = 'block';
             } else {
                 alert("کۆدەکە هەڵەیە! تکایە 1234 بنووسە.");
             }

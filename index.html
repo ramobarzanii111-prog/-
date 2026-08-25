@@ -1,376 +1,189 @@
 <!DOCTYPE html>
-<html lang="ku" dir="ltr">
+<html lang="ku" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>یاری گرەو - Login & Age Gate</title>
-  <style>
-    * {
-      box-sizing: border-box;
-      -webkit-tap-highlight-color: transparent;
-      margin: 0;
-      padding: 0;
-      user-select: none;
-    }
-    body {
-      background: #020202;
-      font-family: system-ui, -apple-system, sans-serif;
-      color: #fff;
-      height: 100vh;
-      width: 100vw;
-      overflow: hidden;
-    }
-
-    #authScreen {
-      position: absolute;
-      inset: 0;
-      width: 100vw;
-      height: 100vh;
-      background: radial-gradient(circle at center, #1b2024 0%, #050607 100%);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 1000;
-    }
-    .auth-card {
-      background: #151a1e;
-      border: 2px solid #f1c40f;
-      border-radius: 16px;
-      width: 90%;
-      max-width: 380px;
-      padding: 20px;
-      direction: rtl;
-      text-align: center;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.8);
-    }
-    .auth-title { font-size: 18px; font-weight: 900; color: #f1c40f; margin-bottom: 4px; }
-    .auth-sub { font-size: 10px; color: #a4b0be; margin-bottom: 14px; }
-    
-    .auth-input-group {
-      margin-bottom: 10px;
-      text-align: right;
-    }
-    .auth-input-group label { font-size: 10px; color: #ddd; display: block; margin-bottom: 3px; }
-    .auth-input {
-      width: 100%;
-      padding: 8px 10px;
-      background: #222;
-      border: 1px solid #444;
-      border-radius: 8px;
-      color: #fff;
-      font-size: 11px;
-      text-align: center;
-    }
-    .auth-submit-btn {
-      width: 100%;
-      background: linear-gradient(135deg, #f1c40f, #b38728);
-      color: #000;
-      border: none;
-      padding: 9px;
-      border-radius: 8px;
-      font-size: 12px;
-      font-weight: 900;
-      cursor: pointer;
-      margin-top: 10px;
-    }
-
-    .screen {
-      position: absolute;
-      inset: 0;
-      width: 100vw;
-      height: 100vh;
-      display: none;
-      flex-direction: column;
-      justify-content: space-between;
-      padding: 8px 12px;
-      background: linear-gradient(rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.65)), url('https://images.unsplash.com/photo-1542224566-6e85f2e6772f?q=80&w=1000&auto=format&fit=crop') no-repeat center center;
-      background-size: cover;
-      z-index: 10;
-    }
-    #gameScreen {
-      display: none;
-      z-index: 500;
-      background: #000;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .lobby-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: rgba(0,0,0,0.7);
-      border: 1px solid rgba(241,196,15,0.4);
-      padding: 4px 10px;
-      border-radius: 12px;
-      backdrop-filter: blur(4px);
-    }
-    .user-pill { display: flex; align-items: center; gap: 6px; cursor: pointer; }
-    .user-avatar-box {
-      width: 32px; height: 32px; border-radius: 50%; background: #2c3e50; border: 2px solid #f1c40f;
-      display: flex; align-items: center; justify-content: center; font-size: 16px;
-    }
-    .user-meta { display: flex; flex-direction: column; line-height: 1.1; }
-    .user-name { font-size: 11px; font-weight: bold; color: #fff; }
-    .user-rank-tag { font-size: 8px; color: #f1c40f; }
-
-    .welcome-banner {
-      text-align: center;
-      background: rgba(0, 0, 0, 0.6);
-      border: 1px solid rgba(241,196,15,0.4);
-      padding: 6px;
-      border-radius: 10px;
-      margin: 4px 0;
-      backdrop-filter: blur(4px);
-    }
-    .welcome-banner h2 { font-size: 15px; font-weight: 900; color: #f1c40f; text-shadow: 0 0 10px rgba(241,196,15,0.6); }
-
-    .online-badge { background: rgba(46, 204, 113, 0.2); border: 1px solid #2ecc71; color: #2ecc71; padding: 2px 6px; border-radius: 6px; font-size: 8px; font-weight: bold; }
-
-    .lobby-currencies { display: flex; gap: 6px; }
-    .curr-badge {
-      background: rgba(0,0,0,0.6); padding: 3px 6px; border-radius: 6px; font-size: 9px; font-weight: bold;
-      display: flex; align-items: center; gap: 4px; border: 1px solid rgba(255,255,255,0.2); cursor: pointer;
-    }
-
-    .lobby-rooms-container { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; width: 100%; margin: auto 0; }
-    .room-card {
-      background: rgba(0, 0, 0, 0.75); border: 1.5px solid rgba(255,255,255,0.25); border-radius: 12px;
-      padding: 6px 4px; display: flex; flex-direction: column; align-items: center; justify-content: space-between;
-      height: 125px; text-align: center; cursor: pointer; backdrop-filter: blur(4px);
-    }
-    .room-card:active { transform: scale(0.96); }
-    .room-card.vip { border-color: #f1c40f; }
-    .room-card.okey81 { border-color: #2ecc71; }
-    .room-card.bet { border-color: #0984e3; }
-    
-    .room-icon-box { width: 36px; height: 36px; border-radius: 8px; background: rgba(0,0,0,0.6); display: flex; align-items: center; justify-content: center; font-size: 18px; }
-    .gold-tile-icon { width: 20px; height: 28px; background: linear-gradient(135deg, #f1c40f, #b38728); border-radius: 3px; display: flex; align-items: center; justify-content: center; color: #000; font-weight: 900; font-size: 12px; border: 1px solid #fff; }
-    .white-tile-icon { width: 20px; height: 28px; background: #fff; border-radius: 3px; display: flex; align-items: center; justify-content: center; color: #d63031; font-weight: 900; font-size: 11px; border: 1px solid #ccc; }
-    .room-title { font-size: 10px; font-weight: bold; }
-    .room-req { font-size: 7.5px; color: #a4b0be; }
-    .room-btn { width: 90%; padding: 4px 0; border-radius: 5px; font-size: 8.5px; font-weight: 900; border: none; color: #fff; pointer-events: none; }
-
-    .lobby-bottom { display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.6); padding: 6px; border-radius: 12px; backdrop-filter: blur(4px); }
-    .bottom-nav { display: flex; gap: 6px; flex-wrap: wrap; }
-    .nav-btn { background: rgba(0,0,0,0.7); border: 1px solid rgba(255,255,255,0.25); color: #fff; padding: 5px 10px; border-radius: 8px; font-size: 9px; font-weight: bold; display: flex; align-items: center; gap: 4px; cursor: pointer; }
-
-    .modal-overlay { position: fixed !important; inset: 0 !important; width: 100vw !important; height: 100vh !important; background: rgba(0,0,0,0.88) !important; z-index: 99999 !important; display: none; align-items: center; justify-content: center; }
-    .modal-card { background: #151a1e; border: 2px solid #b38728; border-radius: 12px; width: 92%; max-width: 460px; padding: 12px; direction: rtl; }
-    .modal-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.15); padding-bottom: 4px; margin-bottom: 8px; }
-    .close-btn { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: #fff; width: 24px; height: 24px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 12px; }
-
-    .shop-tabs { display: flex; gap: 4px; margin-bottom: 6px; }
-    .shop-tab-btn { flex: 1; padding: 5px 2px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); color: #fff; border-radius: 6px; font-size: 8.5px; font-weight: bold; cursor: pointer; }
-    .shop-tab-btn.active { background: #f1c40f; color: #000; }
-    .shop-scroll-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; max-height: 175px; overflow-y: auto; padding: 4px 2px; }
-    .shop-item-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; padding: 5px 3px; display: flex; flex-direction: column; align-items: center; justify-content: space-between; gap: 2px; text-align: center; font-size: 8px; min-height: 75px; }
-    .buy-btn { background: #27ae60; border: none; color: #fff; padding: 4px 6px; border-radius: 4px; font-size: 9px; font-weight: bold; cursor: pointer; width: 100%; }
-    .sell-btn { background: #c0392b; border: none; color: #fff; padding: 4px 6px; border-radius: 4px; font-size: 9px; font-weight: bold; cursor: pointer; width: 100%; }
-    .side-btn { background: #16a085; border: 1px solid #2ecc71; color: #fff; padding: 5px 10px; border-radius: 6px; font-size: 9.5px; font-weight: bold; cursor: pointer; text-align: center; }
-
-    .vip-table { width: 98vw; height: 96vh; background: radial-gradient(ellipse at center, #1b2024 0%, #0d1013 60%, #050607 100%); border: 6px solid #b38728; border-radius: 24px; position: relative; display: flex; flex-direction: column; justify-content: space-between; align-items: center; padding: 4px; }
-    .table-logo { position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%); font-size: 26px; font-weight: 900; color: rgba(218, 165, 32, 0.35); }
-    .turn-bar { position: absolute; top: 36px; left: 50%; transform: translateX(-50%); background: rgba(0, 0, 0, 0.85); padding: 2px 10px; border-radius: 12px; border: 1px solid rgba(241,196,15,0.4); font-size: 10px; font-weight: bold; }
-    .player-profile { display: flex; flex-direction: column; align-items: center; position: absolute; }
-    .p-top { top: 4px; left: 50%; transform: translateX(-50%); }
-    .p-left { top: 40%; left: 8px; }
-    .p-right { top: 40%; right: 8px; }
-    .p-bottom-left { bottom: 58px; left: 8px; }
-    .avatar-wrapper { width: 32px; height: 32px; border-radius: 50%; border: 2px solid #3498db; background: #2c3e50; display: flex; align-items: center; justify-content: center; font-size: 14px; }
-    .center-mat { position: absolute; top: 42%; left: 50%; transform: translate(-50%, -50%); display: flex; gap: 15px; }
-    .deck-stack { width: 38px; height: 50px; background: #f8f6f0; border-radius: 5px; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 900; color: #2c3e50; }
-    .discard-slot { width: 38px; height: 50px; background: rgba(0,0,0,0.4); border: 2px dashed rgba(255,255,255,0.25); border-radius: 5px; display: flex; align-items: center; justify-content: center; }
-    .player-bottom-container { width: 96%; display: flex; align-items: center; justify-content: center; gap: 4px; }
-    .black-wood-rack { flex: 1; background: #1e2227; border: 2px solid #3d4148; border-radius: 8px; padding: 3px; display: flex; flex-direction: column; gap: 2px; }
-    .rack-tier { display: flex; justify-content: center; gap: 2px; min-height: 38px; background: rgba(0, 0, 0, 0.6); border-radius: 4px; padding: 2px; }
-    .tile { width: 25px; height: 36px; background: #fff; border-radius: 4px; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #d63031; font-weight: 900; font-size: 13px; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>یاری گرەو - کوردستان</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.7)), 
+                        url('https://images.unsplash.com/photo-1542224566-6e85f2e6772f?q=80&w=1000&auto=format&fit=crop') no-repeat center center fixed;
+            background-size: cover;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+        .casino-container {
+            background: rgba(22, 22, 22, 0.85);
+            backdrop-filter: blur(10px);
+            border: 2px solid #d4af37;
+            border-radius: 20px;
+            padding: 30px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 0 30px rgba(212, 175, 55, 0.4);
+            text-align: center;
+        }
+        .logo-area h1 {
+            color: #d4af37;
+            font-size: 26px;
+            margin-bottom: 8px;
+            text-shadow: 0 0 10px rgba(212, 175, 55, 0.6);
+        }
+        .logo-area p {
+            color: #ddd;
+            font-size: 13px;
+            margin-bottom: 20px;
+        }
+        .input-group {
+            margin-bottom: 15px;
+            text-align: right;
+        }
+        .input-group label {
+            display: block;
+            color: #d4af37;
+            font-size: 13px;
+            margin-bottom: 6px;
+        }
+        .input-group input {
+            width: 100%;
+            padding: 12px 15px;
+            background-color: rgba(26, 26, 26, 0.9);
+            border: 1px solid #555;
+            border-radius: 10px;
+            color: #fff;
+            font-size: 15px;
+            outline: none;
+            transition: 0.3s;
+        }
+        .input-group input:focus {
+            border-color: #d4af37;
+            box-shadow: 0 0 8px rgba(212, 175, 55, 0.5);
+        }
+        .btn-casino {
+            width: 100%;
+            padding: 13px;
+            background: linear-gradient(135deg, #bf953f, #fcf6ba, #b38728, #fbf5b7);
+            border: none;
+            border-radius: 10px;
+            color: #000;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);
+            margin-top: 5px;
+        }
+        .btn-casino:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(212, 175, 55, 0.6);
+        }
+        .hidden {
+            display: none;
+        }
+        .game-screen {
+            text-align: center;
+        }
+        .game-screen h2 {
+            color: #d4af37;
+            margin-bottom: 15px;
+        }
+        .info-box {
+            background: rgba(31, 31, 31, 0.9);
+            border: 1px solid #d4af37;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 15px;
+            color: #f1c40f;
+        }
+        .music-notice {
+            font-size: 11px;
+            color: #f1c40f;
+            margin-bottom: 15px;
+        }
+    </style>
 </head>
 <body>
 
-  <div id="authScreen">
-    <div class="auth-card">
-      <div class="auth-title">🎮 چوونەژوورەوە بۆ یاری گرەو</div>
-      <div class="auth-sub">تکایە زانیارییەکانی خۆت بنووسە (مەرجی تەمەن ١٨+)</div>
-      
-      <div class="auth-input-group">
-        <label>ژمارەی مۆبایل یان ئیمێڵ:</label>
-        <input type="text" id="userInput" class="auth-input" placeholder="0750XXXXXXX یان email@gmail.com">
-      </div>
+    <audio id="bgMusic" loop>
+        <source src="https://archive.org/download/HassanZirak/HassanZirak.mp3" type="audio/mpeg">
+    </audio>
 
-      <div class="auth-input-group">
-        <label>ساڵی لەدایکبوون (بۆ نموونە: 2000):</label>
-        <input type="number" id="birthYearInput" class="auth-input" placeholder="ساڵی لەدایکبوون">
-      </div>
+    <div class="casino-container">
+        <div id="loginSection">
+            <div class="logo-area">
+                <h1>🌄 یاری گرەو - کوردستان</h1>
+                <p>تکایە ژمارەی مۆبایل یان ئیمێڵەکەت بنووسە</p>
+            </div>
+            
+            <div class="music-notice">🎵 لەگەڵ کردنەوەی ئەپەکە، گۆرانی ڕەسەنی کوردی لێ دەدرێت</div>
 
-      <button class="auth-submit-btn" onclick="verifyAndLogin()">چوونەژوورەوە</button>
-    </div>
-  </div>
+            <div id="step1">
+                <div class="input-group">
+                    <label>ژمارەی مۆبایل یان ئیمێڵ:</label>
+                    <input type="text" id="userInput" placeholder="بۆ نموونە: 0750XXXXXXX">
+                </div>
+                <button class="btn-casino" onclick="sendCode()">ناردنی کۆدی پشکنین</button>
+            </div>
 
-  <div id="lobbyScreen" class="screen" style="display: none;">
-    
-    <div class="lobby-top">
-      <div class="user-pill" onclick="openProfileModal()">
-        <div class="user-avatar-box"><span>😎</span></div>
-        <div class="user-meta">
-          <span class="user-name" id="displayPlayerName">Player</span>
-          <span class="user-rank-tag">یاریزانی تازە (0 خاڵ) 🌱</span>
+            <div id="step2" class="hidden">
+                <div class="input-group">
+                    <label>کۆدی نێردراو بنووسە (کۆدەکە: 1234):</label>
+                    <input type="text" id="codeinput" placeholder="XXXX">
+                </div>
+                <button class="btn-casino" onclick="verifyCode()">چوونە ژوورەوە</button>
+            </div>
         </div>
-      </div>
 
-      <div class="online-badge"><span>🟢 1,420 ئۆنلاین</span></div>
-
-      <div class="lobby-currencies">
-        <div class="curr-badge" style="color:#0984e3;"><span>💧 100 PT</span></div>
-        <div class="curr-badge" style="color:#00cec9;" onclick="openModal('fibModal')">
-          <span>🔷 <span id="lobbyDiamonds">0</span> +</span>
+        <div id="gameSection" class="game-screen hidden">
+            <h2>بەخێر هاتیت بۆ یاری گرەو</h2>
+            <div class="info-box">⭐ کوردستان - لانکەی ئارامی و کاتبەسەربردن</div>
+            <p style="color: #ddd; margin-bottom: 20px;">سیستەمی یارییەکە ئامادەیە بۆ یاریکردن!</p>
+            <button class="btn-casino" onclick="alert('یاریکردن دەست پێدەکات!')">دەستپێکردنی یاری</button>
         </div>
-        <div class="curr-badge" style="color:#f1c40f;" onclick="openModal('shopModal')">
-          <span>🪙 1,000</span>
-        </div>
-      </div>
     </div>
 
-    <div class="welcome-banner">
-      <h2>بەخێر بێن بۆ یاری گرەو</h2>
-    </div>
+    <script>
+        document.body.addEventListener('click', function() {
+            const music = document.getElementById('bgMusic');
+            if (music.paused) {
+                music.play().catch(e => console.log(e));
+            }
+        }, { once: true });
 
-    <div class="lobby-rooms-container">
-      <div class="room-card vip" onclick="enterGame('VIP', '20 🔷', '#f1c40f')">
-        <div class="room-icon-box"><div class="gold-tile-icon">★</div></div>
-        <div>
-          <div class="room-title" style="color:#f1c40f;">ژووری VIP</div>
-          <div class="room-req">گرەو بە ئەڵماسی شین</div>
-        </div>
-        <button class="room-btn" style="background:#f1c40f; color:#000;">چوونەژوورەوە</button>
-      </div>
+        function sendCode() {
+            const val = document.getElementById('userInput').value;
+            if(val.trim() === "") {
+                alert("تکایە ژمارەی مۆبایل یان ئیمێڵ بنووسە!");
+                return;
+            }
+            document.getElementById('step1').classList.add('hidden');
+            document.getElementById('step2').classList.remove('hidden');
+            alert("کۆدی پشکنین نێردرا: 1234");
+        }
 
-      <div class="room-card" onclick="enterGame('تایبەت', 'بێ گرەو', '#3498db')">
-        <div class="room-icon-box"><span>👥</span></div>
-        <div>
-          <div class="room-title" style="color:#3498db;">ژووری تایبەت</div>
-          <div class="room-req">یاری لەگەڵ هاوڕێ</div>
-        </div>
-        <button class="room-btn" style="background:#3498db;">چوونەژوورەوە</button>
-      </div>
-
-      <div class="room-card okey81" onclick="enterGame('ئۆکەی ٨١ (هەولێر)', 'بەخۆڕایی', '#2ecc71')">
-        <div class="room-icon-box"><div class="white-tile-icon">81</div></div>
-        <div>
-          <div class="room-title" style="color:#2ecc71;">ئۆکەی ٨١ (هەولێری)</div>
-          <div class="room-req" style="color:#2ecc71;">یاسای فەرمیی هەولێر 🀄</div>
-        </div>
-        <button class="room-btn" style="background:#27ae60;">چوونەژوورەوە</button>
-      </div>
-
-      <div class="room-card bet" onclick="enterGame('گرەو کردن', '300 🔷', '#0984e3')">
-        <div class="room-icon-box"><span>💵</span></div>
-        <div>
-          <div class="room-title" style="color:#0984e3;">ژووری گرەو کردن</div>
-          <div class="room-req">گرەوی ئەڵماسی شین</div>
-        </div>
-        <button class="room-btn" style="background:#0984e3;">چوونەژوورەوە</button>
-      </div>
-    </div>
-
-    <div class="lobby-bottom">
-      <div class="bottom-nav">
-        <button class="nav-btn" style="border-color:#0984e3;" onclick="openModal('fibModal')">🛒 کڕین و فرۆشتنی ئەڵماس</button>
-        <button class="nav-btn" style="border-color:#f1c40f;" onclick="openModal('shopModal')">🛍️ دوکان (شۆپ)</button>
-        <button class="nav-btn" style="border-color:#e67e22;" onclick="openModal('challengesModal')">🎯 چالنجەکان</button>
-      </div>
-      <button class="nav-btn" style="border-color:#e74c3c;" onclick="openModal('lobbySettingsModal')">⚙️ سیتینگ</button>
-    </div>
-
-  </div>
-
-  <div class="modal-overlay" id="profileModal">
-    <div class="modal-card">
-      <div class="modal-header">
-        <h4 style="color:#f1c40f;">👤 گۆڕینی ناوی یاریزان</h4>
-        <button class="close-btn" onclick="closeAllModals()">✕</button>
-      </div>
-      <div style="display:flex; flex-direction:column; gap:8px; padding:4px;">
-        <input type="text" id="playerNameInput" style="width:100%; padding:6px; background:#222; color:#fff; border:1px solid #444; border-radius:6px; font-size:11px; text-align:center;" value="Player">
-        <button class="side-btn" style="background:#27ae60;" onclick="savePlayerName()">💾 پاشەکەوتکردنی ناو</button>
-      </div>
-    </div>
-  </div>
-
-  <div class="modal-overlay" id="shopModal">
-    <div class="modal-card">
-      <div class="modal-header">
-        <h4 style="color:#f1c40f;">🛍️ دوکانی کەرەستەکان (شۆپ)</h4>
-        <button class="close-btn" onclick="closeAllModals()">✕</button>
-      </div>
-
-      <div class="shop-tabs">
-        <button class="shop-tab-btn active" id="tabRacks" onclick="switchShopTab('racks')">🪵 تەختەکان</button>
-        <button class="shop-tab-btn" id="tabTables" onclick="switchShopTab('tables')">✨ مێزەکان</button>
-        <button class="shop-tab-btn" id="tabTiles" onclick="switchShopTab('tiles')">🀄 پوولەکان</button>
-      </div>
-
-      <div id="secRacks" class="shop-scroll-grid"></div>
-      <div id="secTables" class="shop-scroll-grid" style="display:none;"></div>
-      <div id="secTiles" class="shop-scroll-grid" style="display:none;"></div>
-    </div>
-  </div>
-
-  <div class="modal-overlay" id="fibModal">
-    <div class="modal-card">
-      <div class="modal-header">
-        <h4 style="color:#0984e3;">🛒 کڕین و فرۆشتنی ئەڵماس (FIB)</h4>
-        <button class="close-btn" onclick="closeAllModals()">✕</button>
-      </div>
-
-      <div class="shop-tabs">
-        <button class="shop-tab-btn active" id="tabBuy" onclick="switchFibTab('buy')">📥 کڕینی ئەڵماس</button>
-        <button class="shop-tab-btn" id="tabSell" onclick="switchFibTab('sell')">📤 فرۆشتنی ئەڵماس</button>
-      </div>
-
-      <div id="secBuy">
-        <div style="font-size:9px; color:#aaa; margin-bottom:6px; text-align:center;">لە ڕێگەی FIB بە پارەی عێراقی ئەڵماس بکڕە:</div>
-        <div style="display:grid; grid-template-columns:repeat(2, 1fr); gap:6px;">
-          <div style="background:rgba(255,255,255,0.05); padding:6px; border-radius:6px; text-align:center;">
-            <b style="color:#0984e3; font-size:11px;">1,000 🔷</b><br><span style="color:#f1c40f; font-size:9px;">20,000 دینار</span>
-            <button class="buy-btn" style="margin-top:4px;" onclick="buyDiamonds(1000)">کڕین بە FIB</button>
-          </div>
-          <div style="background:rgba(255,255,255,0.05); padding:6px; border-radius:6px; text-align:center;">
-            <b style="color:#0984e3; font-size:11px;">2,000 🔷</b><br><span style="color:#f1c40f; font-size:9px;">40,000 دینار</span>
-            <button class="buy-btn" style="margin-top:4px;" onclick="buyDiamonds(2000)">کڕین بە FIB</button>
-          </div>
-        </div>
-      </div>
-
-      <div id="secSell" style="display:none;">
-        <div style="font-size:9px; color:#aaa; margin-bottom:6px; text-align:center;">ئەڵماسەکانت بفرۆشەوە بە دینار (باجی خاوەن یاری ١٠٪):</div>
-        <div style="display:grid; grid-template-columns:repeat(2, 1fr); gap:6px;">
-          <div style="background:rgba(255,255,255,0.05); padding:6px; border-radius:6px; text-align:center;">
-            <b style="color:#0984e3; font-size:11px;">1,000 🔷</b><br><span style="color:#f1c40f; font-size:9px;">نرخ: 20,000 دینار<br>(باج: 2,000)</span>
-            <button class="sell-btn" style="margin-top:4px;" onclick="sellDiamonds(1000, 20000)">فرۆشتن بە FIB</button>
-          </div>
-          <div style="background:rgba(255,255,255,0.05); padding:6px; border-radius:6px; text-align:center;">
-            <b style="color:#0984e3; font-size:11px;">2,000 🔷</b><br><span style="color:#f1c40f; font-size:9px;">نرخ: 40,000 دینار<br>(باج: 4,000)</span>
-            <button class="sell-btn" style="margin-top:4px;" onclick="sellDiamonds(2000, 40000)">فرۆشتن بە FIB</button>
-          </div>
-        </div>
-      </div>
-
-    </div>
-  </div>
-
-  <div class="modal-overlay" id="lobbySettingsModal">
-    <div class="modal-card">
-      <div class="modal-header">
-        <h4 style="color:#f1c40f;">⚙️ سیتینگی لۆبی</h4>
-        <button class="close-btn" onclick="closeAllModals()">✕</button>
-      </div>
-      <div style="display:flex; flex-direction:column; gap:8px;">
-        <button class="side-btn" style="background:#3498db;" onclick="openProfileModal()">👤 گۆڕینی ناوی یاریزان</button>
-        <button class="side-btn" style="background:#f1c40f; color:#000;" onclick="openModal('shopModal')">🛍️ دوکانی کەرەستەکان (شۆپ)</button>
-        <button class="side-btn" style="background:#e67e22;" onclick="openModal('challengesModal')">🎯 چالنجە هەفتانەییەکان</button>
-        <button class="side-btn" style="background:#c0392b;" onclick="closeAllModals(); alert('سوپاس بۆ یاریکردنت!');">🚪 چوونەدەرەوە</button>
-      </div>
-    </div>
-  </d
+        function verifyCode() {
+            const code = document.getElementById('codeinput').value;
+            if(code === "1234") {
+                const music = document.getElementById('bgMusic');
+                music.pause();
+                
+                document.getElementById('loginSection').classList.add('hidden');
+                document.getElementById('gameSection').classList.remove('hidden');
+            } else {
+                alert("کۆدەکە هەڵەیە! تکایە 1234 بنووسە.");
+            }
+        }
+    </script>
+</body>
+</html>
